@@ -1,65 +1,62 @@
-import numpy as np
+import numpy 
 
 
-def create_scoring_matrix(match, mismatch, gap):
-    scoring_matrix = {}
+def vytvoreni_tabulky(shoda, neshoda):
+    tabulka = {}
     bases = ['A', 'T', 'C', 'G']
     for base1 in bases:
         for base2 in bases:
             if base1 == base2:
-                scoring_matrix[(base1, base2)] = match
+                tabulka[(base1, base2)] = shoda
             else:
-                scoring_matrix[(base1, base2)] = mismatch
-    return scoring_matrix
-
-# Needleman-Wunch algoritmus pro pairwise alignment
+                tabulka[(base1, base2)] = neshoda
+    return tabulka
 
 
-def needleman_wunsch(seq1, seq2, scoring_matrix, gap_penalty):
-    n = len(seq1)
-    m = len(seq2)
 
-    # Inicializace matice pro dynamické programování
-    dp = np.zeros((n + 1, m + 1))
+def needleman_wunsch(seq1, seq2, skore_tabulky, mezera):
+    x = len(seq1)
+    y = len(seq2)
+
+    tabulka = numpy.zeros((x + 1, y + 1))
 
     # Inicializace první řádku a prvního sloupce
-    for i in range(1, n + 1):
-        dp[i][0] = dp[i-1][0] + gap_penalty
-    for j in range(1, m + 1):
-        dp[0][j] = dp[0][j-1] + gap_penalty
+    for i in range(1, x + 1):
+        tabulka[i][0] = tabulka[i-1][0] + mezera
+    for j in range(1, y + 1):
+        tabulka[0][j] = tabulka[0][j-1] + mezera
 
     # Výpočet hodnot v matici
-    for i in range(1, n + 1):
-        for j in range(1, m + 1):
-            match_score = dp[i-1][j-1] + scoring_matrix[(seq1[i-1], seq2[j-1])]
-            delete_score = dp[i-1][j] + gap_penalty
-            insert_score = dp[i][j-1] + gap_penalty
-            dp[i][j] = max(match_score, delete_score, insert_score)
+    for i in range(1, x + 1):
+        for j in range(1, y + 1):
+            shoda = tabulka[i-1][j-1] + skore_tabulky[(seq1[i-1], seq2[j-1])]
+            zleva = tabulka[i-1][j] + mezera
+            zeShora = tabulka[i][j-1] + mezera
+            tabulka[i][j] = max(shoda, zleva, zeShora)
 
     # Rekonstrukce alignmentu
-    align1 = []
-    align2 = []
-    i = n
-    j = m
-    while i > 0 or j > 0:
-        if i > 0 and dp[i][j] == dp[i-1][j] + gap_penalty:
-            align1.append(seq1[i-1])
-            align2.append('-')
-            i -= 1
-        elif j > 0 and dp[i][j] == dp[i][j-1] + gap_penalty:
-            align1.append('-')
-            align2.append(seq2[j-1])
-            j -= 1
+    pomocna1 = []
+    pomocna2 = []
+  
+    while x > 0 or y > 0:
+        if tabulka[x][y] == tabulka[x-1][y] + mezera:
+            pomocna1.append(seq1[x-1])
+            pomocna2.append('-')
+            x -= 1
+        elif tabulka[x][y] == tabulka[x][y-1] + mezera:
+            pomocna1.append('-')
+            pomocna2.append(seq2[y-1])
+            y -= 1
         else:
-            align1.append(seq1[i-1])
-            align2.append(seq2[j-1])
-            i -= 1
-            j -= 1
+            pomocna1.append(seq1[x-1])
+            pomocna2.append(seq2[y-1])
+            x -= 1
+            y -= 1
 
-    alignment1 = ''.join(align1[::-1])
-    alignment2 = ''.join(align2[::-1])
+    Vzor = ''.join(pomocna1[::-1])
+    Zarovnano = ''.join(pomocna2[::-1])
 
-    return alignment1, alignment2
+    return Vzor, Zarovnano
 
 
 # Vstupní sekvence
@@ -67,19 +64,19 @@ seq1 = "ATGCT"
 seq2 = "AGCT"
 
 # Nastavení parametrů
-match_score = 1
-mismatch_score = -1
-gap_penalty = -2
+shoda_skore = 1
+neschodujici_skore = -1
+mezera_skore = -2
 
 # Vytvoření skórovací tabulky
-scoring_matrix = create_scoring_matrix(
-    match_score, mismatch_score, gap_penalty)
+tabulka = vytvoreni_tabulky(
+    shoda_skore, neschodujici_skore)
 
 # Spuštění Needleman-Wunch algoritmu
-alignment1, alignment2 = needleman_wunsch(
-    seq1, seq2, scoring_matrix, gap_penalty)
+Vzor, Zarovnano = needleman_wunsch(
+    seq1, seq2, tabulka, mezera_skore)
 
 # Výstup
-print("Optimální alignment:")
-print(alignment1)
-print(alignment2)
+print("Optimální zarovnani:")
+print(Vzor)
+print(Zarovnano)

@@ -27,6 +27,6 @@ def boyer_moore_horspool(text, heslo):
 
 
 
-text =   "kfksdjsfjsdafjsdafksds"
+text =   "dfaedfgcedffesvesdrfskfksdjsfjsdafjsdafksds"
 heslo  = "fksdjsf"
 boyer_moore_horspool(text,heslo)
