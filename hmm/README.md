@@ -14,7 +14,9 @@ Jako druhé bylo nutné naučit hmm. To jsem si myslel že bude jednoduchý úko
 
 ## 3. úkol
 
-Tento úkol dost zmatený jelikož jsem nepochopil proč se nám dává tolik čísel ale po uvážení jsem se rozhodl využít v hranatých závorkách a nasázel jsem je do hmm a tady jsou výsledky ![ob1](imgs/pokus1.PNG) ![obr2](imgs/pokus2.PNG) ![obr3](imgs/pokus3.PNG)
+Tento úkol dost zmatený jelikož jsem nepochopil proč se nám dává tolik čísel ale po uvážení jsem se rozhodl využít v hranatých závorkách a nasázel jsem je do hmm a tady jsou výsledky
+
+![ob1](imgs/pokus1.PNG) ![obr2](imgs/pokus2.PNG) ![obr3](imgs/pokus3.PNG)
 
 Ale testoval jsem to na 6 komponentách a 200 iteracíh tudíž si myslím že to je přesné.
 
